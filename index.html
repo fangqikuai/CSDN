@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html ng-app="myapp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    <title>CSDN</title>
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./css/index.css">
+</head>
+
+<body>
+    <div ui-view></div>
+    <nav class="foot-nav">
+        <ul>
+            <li><a href="##" class="active"><span class="iconfont">&#xe604;</span> 头条</a></li>
+            <li><a href="##"><span class="iconfont">&#xe603;</span> 博客</a></li>
+            <li><a href="##"><span class="iconfont">&#xe602;</span> 我的</a></li>
+        </ul>
+    </nav>
+</body>
+<script src="node_modules/angular/angular.js"></script>
+<script src="node_modules/angular-ui-router/release/angular-ui-router.js"></script>
+<script>
+var app = angular.module('myapp', ['ui.router']);
+app.config(['$stateProvider','$urlRouterProvider',function($stateProvider,$urlRouterProvider){
+            $stateProvider.state('headlines',{
+                url:'/headlines',
+                templateUrl:'./views/headlines.html',
+            }).state('headlines.lists',{
+                url:'/:id',
+                templateUrl:'./views/headlines_list.html',
+                controller:'headlinesListsCtrl'
+            })
+            $urlRouterProvider.when('','/headlines/1')
+        }])
+app.controller('headlinesListsCtrl', ['$scope', '$http','$stateParams', function($scope,$http,$stateParams) {
+    $scope.data = [];
+    $scope.page = 1;
+    console.log($stateParams);
+    var more = function() {
+        $http.jsonp('api.php',{
+            params: {
+                callback: 'JSON_CALLBACK',
+                comid: $stateParams.id,
+                page: 1,
+            }
+        }).success(function(data) {
+            if(data.data.length == 0){
+                more();
+            }
+            console.log(data);
+            $scope.data = data.data;
+        })
+    }
+    more();
+}])
+app.directive('autofocus', ['$location', function($location) {
+    return {
+        link: function(scope, ele, arrt) {
+            scope.$location = $location;
+            scope.$watch('$location.path()',function(now){
+                var aLink = ele.children().attr('href');
+                var type = aLink.replace('#', '');
+                if (now.startsWith(type)) {
+                    // 访问的是当前链接
+                    ele.parent().children().removeClass('active');
+                    ele.addClass('active');
+            }
+            })
+        }
+    }
+}])
+</script>
+
+</html>

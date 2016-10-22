@@ -1,0 +1,15 @@
+{
+  "name": "csdn",
+  "version": "1.0.0",
+  "description": "模�仿CSDN手机app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "angular": "^1.5.8",
+    "angular-ui-route": "0.3.1",
+  }
+}

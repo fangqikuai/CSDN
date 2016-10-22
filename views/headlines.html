@@ -1,0 +1,68 @@
+<header class="headlines-top-nav">
+    <h3 class="title">头条</h3>
+    <nav>
+        <ul>
+            <li autofocus><a href="#/headlines/1">前端</a></li>
+            <li autofocus><a href="#/headlines/2">移动开发</a></li>
+            <li autofocus><a href="#/headlines/3">语言</a></li>
+            <li autofocus><a href="#/headlines/4">游戏&图像</a></li>
+            <li autofocus><a href="#/headlines/5">系统&安全</a></li>
+            <li autofocus><a href="#/headlines/6">loT</a></li>
+            <li autofocus><a href="#/headlines/7">数据库</a></li>
+            <li autofocus><a href="#/headlines/8">业界</a></li>
+            <li autofocus><a href="#/headlines/9">云计算</a></li>
+            <li autofocus><a href="#/headlines/10">大数据</a></li>
+        </ul>
+    </nav>
+</header>
+<div ui-view></div>
+
+
+<style>
+
+/*--------顶部导航---------------*/
+.headlines-top-nav {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.headlines-top-nav > .title {
+    height: .36rem;
+    line-height: .36rem;
+    background: #fff;
+    font-size: .2rem;
+    text-align: center;
+}
+
+.headlines-top-nav > nav {
+    overflow-x: scroll;
+}
+
+.headlines-top-nav > nav > ul {
+    width: 200%;
+    height: .3rem;
+    background: #e9e9e9;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+.headlines-top-nav > nav > ul > li {
+    float: left;
+    width: 10%;
+    height: 100%;
+    line-height: .3rem;
+    font-size: .12rem;
+    text-align: center;
+}
+
+.headlines-top-nav > nav > ul > li.active {
+    border-bottom: 1px solid red;
+}
+
+.headlines-top-nav > nav > ul > li.active > a {
+    color: red;
+}
+
+</style>

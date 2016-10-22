@@ -1,0 +1,54 @@
+<section class="content">
+    <ul>
+        <li ng-repeat="data in data">
+            <a ui-sref="##">
+                <h4 class="title">{{data.title}}</h4>
+                <p class="from">来自：{{data.url.split('/')[2]}}</p>
+                <div class="details">
+                    <img ng-src="{{data.avatar}}" alt="" />
+                    <span class="nickname">{{data.nick_name}}</span>
+                    <span>分享于</span>
+                    <span>{{data.created_at}}</span>
+                </div>
+            </a>
+        </li>
+    </ul>
+</section>
+
+<style>
+    .content > ul{
+        width: 100%;
+        padding-top: .66rem;
+        padding-bottom: .48rem;
+    }
+    .content > ul > li{
+        width: 100%;
+        padding: .16rem;
+        height: 1.2rem;
+        border-bottom: 1px solid #eee;
+    }
+    .content > ul > li > a > .title{
+        width: 90%;
+        line-height: .16rem;
+        font-size: .14rem;
+    }
+    .content > ul > li > a > .from{
+        height: .24rem;
+        font-size: .12rem;
+        margin-top: .08rem;
+        color: #c0c0c0;
+    }
+    .content > ul > li > a > .details{
+        height: .2rem;
+        margin-top: .08rem;
+        font-size: .12rem;
+        line-height: .2rem;
+        color: #c0c0c0;
+    }
+    .content > ul > li > a > .details > .nickname{
+        color: #666;
+    }
+    .content > ul > li > a > .details > img{
+        width: .2rem;
+    }
+</style>
