@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html ng-app="myapp">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
@@ -8,14 +7,12 @@
     <link rel="stylesheet" href="./css/common.css">
     <link rel="stylesheet" href="./css/index.css">
 </head>
-
 <body>
-    <div ui-view></div>
-    <nav class="foot-nav">
+    <div class="view" ui-view></div>
+    <nav class="foot-nav" ng-controller="footnavCtrl">
         <ul>
-            <li><a href="##" class="active"><span class="iconfont">&#xe604;</span> 头条</a></li>
-            <li><a href="##"><span class="iconfont">&#xe603;</span> 博客</a></li>
-            <li><a href="##"><span class="iconfont">&#xe602;</span> 我的</a></li>
+            <li navfocus class=""><a href="#/headlines/1"><span class="iconfont">&#xe604;</span><span>头条</span></a></li>
+            <li navfocus><a href="#/my"><span class="iconfont">&#xe602;</span><span>我的</span></a></li>
         </ul>
     </nav>
 </body>
@@ -31,30 +28,55 @@ app.config(['$stateProvider','$urlRouterProvider',function($stateProvider,$urlRo
                 url:'/:id',
                 templateUrl:'./views/headlines_list.html',
                 controller:'headlinesListsCtrl'
-            })
-            $urlRouterProvider.when('','/headlines/1')
-        }])
+            }).state('my',{
+                url:'/my',
+                templateUrl: './views/my.html'
+            }).state('details',{
+                url: '/details?',
+                templateUrl: './views/details.html',
+                controller:'detailsCtrl'
+            });
+            //$urlRouterProvider.when('','/headlines/1')
+            $urlRouterProvider.otherwise('/headlines/1');
+        }]);
 app.controller('headlinesListsCtrl', ['$scope', '$http','$stateParams', function($scope,$http,$stateParams) {
     $scope.data = [];
     $scope.page = 1;
+    $scope.loading = true;
     console.log($stateParams);
     var more = function() {
         $http.jsonp('api.php',{
             params: {
                 callback: 'JSON_CALLBACK',
                 comid: $stateParams.id,
-                page: 1,
+                page: $scope.page,
             }
         }).success(function(data) {
             if(data.data.length == 0){
                 more();
+                console.log('erro')
+            }else{
+                console.log(data);
+                $scope.data = $scope.data.concat(data.data);
+                $scope.loading = false;
+                return;
             }
-            console.log(data);
-            $scope.data = data.data;
         })
     }
     more();
-}])
+    $scope.loadMore = function(){
+        $scope.page += 1;
+        $scope.loading = true;
+        more();
+    }
+}]);
+app.controller('footnavCtrl',['$scope',function($scope){
+
+}]);
+app.controller('detailsCtrl',['$scope','$location','$sce',function($scope,$location,$sce){
+    var url = $location.search().domain;
+    $scope.myurl= $sce.trustAsResourceUrl(url);
+}]);
 app.directive('autofocus', ['$location', function($location) {
     return {
         link: function(scope, ele, arrt) {
@@ -62,15 +84,70 @@ app.directive('autofocus', ['$location', function($location) {
             scope.$watch('$location.path()',function(now){
                 var aLink = ele.children().attr('href');
                 var type = aLink.replace('#', '');
-                if (now.startsWith(type)) {
+                if (now.indexOf(type)!=-1) {
                     // 访问的是当前链接
                     ele.parent().children().removeClass('active');
                     ele.addClass('active');
-            }
+                }
             })
         }
     }
-}])
+}]);
+app.directive('navfocus', ['$location', function($location) {
+    return {
+        link: function(scope, ele, arrt) {
+            scope.$location = $location;
+            scope.$watch('$location.path()',function(now){
+                var aLink = ele.children().attr('href').split('/')[1];
+                console.log(aLink);
+                console.log(now.indexOf(aLink));
+                if (now.indexOf(aLink) > 0) {
+                    // 访问的是当前链接
+                    ele.parent().children().removeClass('active');
+                    ele.addClass('active');
+                }
+            })
+        }
+    }
+}]);
+app.filter('timeDiff',function(){
+    return function(input){
+        //JavaScript函数：
+        var minute = 1000 * 60;
+        var hour = minute * 60;
+        var day = hour * 24;
+        var halfamonth = day * 15;
+        var month = day * 30;
+        var dateTimeStamp = new Date(input).getTime();
+        var now = new Date().getTime();
+        var diffValue = now - dateTimeStamp;
+        if(diffValue < 0){
+            return input;
+        }
+        var monthC =diffValue/month;
+        var weekC =diffValue/(7*day);
+        var dayC =diffValue/day;
+        var hourC =diffValue/hour;
+        var minC =diffValue/minute;
+        if(monthC>=1){
+         result="发表于" + parseInt(monthC) + "个月前";
+         }
+         else if(weekC>=1){
+         result="发表于" + parseInt(weekC) + "周前";
+         }
+         else if(dayC>=1){
+         result="发表于"+ parseInt(dayC) +"天前";
+         }
+         else if(hourC>=1){
+         result="发表于"+ parseInt(hourC) +"个小时前";
+         }
+         else if(minC>=1){
+         result="发表于"+ parseInt(minC) +"分钟前";
+         }else{
+            result="刚刚发表";
+        }
+        return result;
+    }
+});
 </script>
-
 </html>

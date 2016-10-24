@@ -1,0 +1,27 @@
+<div class="content" ng-init="load()">
+    <iframe src="{{myurl}}" frameborder="0" load></iframe>
+    <div class="mask">
+        <div class="spinner">
+            <div class="dot1"></div>
+            <div class="dot2"></div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .content{
+        width: 100%;
+        height: 100%;
+    }
+    iframe{
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        z-index: 99999;
+    }
+    .mask{
+        top: 0;
+        display: none;
+    }
+</style>
